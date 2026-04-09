@@ -6,6 +6,8 @@ Make GPT talk like a normal person. No filler, no fluff, just the answer.
 
 A single system prompt that transforms GPT's verbose, corporate-sounding output into direct, informative responses. Tested on GPT-4o-mini (**71% reduction**) and GPT-5.4 (**56% reduction**) while preserving all useful information. [See full comparison with all 10 test questions and complete answers](TEST_RESULTS.md).
 
+**Question: "What is Python?"**
+
 <details>
 <summary>Before (GPT-4o-mini, 1584 chars)</summary>
 
