@@ -4,13 +4,13 @@ Make GPT talk like a normal person. No filler, no fluff, just the answer.
 
 ## What it does
 
-A single system prompt that transforms GPT's verbose, corporate-sounding output into direct, informative responses. Tested on GPT-4o-mini with **93% reduction in output length** while preserving all useful information.
+A single system prompt that transforms GPT's verbose, corporate-sounding output into direct, informative responses. Tested on GPT-4o-mini with **80% reduction in output length** while preserving all useful information.
 
 Before:
-> "Great question! Python is a versatile, high-level programming language that has gained tremendous popularity in recent years. It's worth noting that Python was created by Guido van Rossum and first released in 1991..." (1500+ chars)
+> "Python is a high-level, interpreted programming language known for its readability and simplicity. It was created by Guido van Rossum and first released in 1991. Python supports multiple programming paradigms, including procedural, object-oriented, and functional programming..." (1584 chars)
 
 After:
-> "A high-level interpreted language. Widely used for web dev, data science, ML, and scripting. Large standard library and package ecosystem." (200 chars)
+> "A high-level interpreted programming language. It's widely used for web development, data science, machine learning, and scripting, featuring a large standard library and a rich ecosystem of third-party packages." (213 chars)
 
 ## Usage
 
@@ -57,15 +57,17 @@ curl https://api.openai.com/v1/chat/completions \
 | # | Prompt | Original | normal-gpt | Reduction |
 |---|--------|----------|-----------|-----------|
 | 1 | What is 2+2? | 16 | 3 | 81% |
-| 2 | What is Python? | 1584 | 213 | 87% |
-| 3 | Explain how HTTP works | 3142 | 579 | 82% |
+| 2 | What is Python? | 1584 | 213 | 86% |
+| 3 | Explain how HTTP works | 3142 | 579 | 81% |
 | 4 | Write hello world in Go | 621 | 191 | 69% |
 | 5 | Is React better than Vue? | 2309 | 298 | 87% |
 | 6 | 2+2等于几? | 18 | 14 | 22% |
 | 7 | 什么是机器学习? | 1471 | 307 | 79% |
 | 8 | 帮我写个排序算法 | 1139 | 553 | 51% |
-| 9 | Redis和Memcached哪个好? | 1762 | 202 | 89% |
-| 10 | Microservices pros/cons | 3083 | 631 | 80% |
+| 9 | Redis和Memcached哪个好? | 1762 | 202 | 88% |
+| 10 | Microservices pros/cons | 3083 | 631 | 79% |
+
+**Average reduction: 80%**
 
 ## License
 
