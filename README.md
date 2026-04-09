@@ -34,6 +34,80 @@ A single system prompt that transforms GPT's verbose, corporate-sounding output 
 After (GPT-4o-mini, 588 chars):
 > Python is a high-level, interpreted programming language known for its readability and versatility. It supports multiple programming paradigms, including procedural, object-oriented, and functional programming. Python is widely used in web development, data analysis, artificial intelligence, scientific computing, and automation due to its extensive libraries and frameworks. Its simplicity makes it an excellent choice for beginners and experienced developers alike.
 
+### Real-world example: financial market analysis
+
+This is the actual case that motivated building normal-gpt. The question was asking GPT to interpret a trader's market commentary about the Strait of Hormuz crisis, energy stocks, and crude oil curve dynamics.
+
+<details>
+<summary>Before (GPT-5.4, ~4500 chars) — the response that made me snap</summary>
+
+> 这段我觉得整体是对的，而且是很成熟的中间派框架。
+>
+> 一句话先说：
+>
+> 他不是在说"战争没事了"，而是在说"最坏情景没发生，但长期摩擦也没消失"。
+> 所以交易上应该是：
+> 前月油跌，远月没那么该跌，能源安全链和被错杀的相关股票会修复，全球权益只要不再交易"经济灾难"就还能涨。
+>
+> ───
+>
+> 这段话的核心逻辑
+>
+> 1. 市场把"海峡会逐步重开"错当成了"风险立刻归零"
+>
+> 他说今天很多板块跌太狠：
+>
+> • energy
+> • fertilizers
+> • ags
+> • tankers
+> • refiners
+> • petrochemicals
+>
+> 背后反映的是一种很激进的定价：
+>
+> 市场在按"霍尔木兹几乎马上完全恢复正常"来交易。而他的观点不是这个。
+>
+> 他的观点是：
+>
+> 会重开，但会很慢，而且战争/摩擦会拖很久。这点我认为是对的。
+> 因为"通行恢复"不等于：
+>
+> • 保险恢复正常
+> • 航运费用恢复正常
+> • 能源安全焦虑消失
+> • 欧洲/海湾国家新增能源投资撤回
+> • 化肥、农业链的供给担忧瞬间消失
+>
+> 所以股票如果按"最坏没发生 = 一切恢复原样"去跌，确实容易跌过头。
+>
+> ───
+>
+> 2. 他最核心的交易表达其实是：原油曲线走平（curve flattens）
+>
+> *(continues for another ~3000 chars with sections on stock reactions, trading methodology, personal assessments, risk warnings, and offers to do more analysis...)*
+
+</details>
+
+After (GPT-5.4 + normal-gpt, ~1500 chars):
+> 这段的核心就一句话：
+>
+> 市场把"最坏情况缓解"错误交易成了"风险已经结束"。
+>
+> 具体拆开看：
+>
+> 1. **他在讲什么** — 市场今天大跌能源、化肥、农业链，是在押注海峡很快完全恢复。他的观点不是这个。他认为会逐步恢复，但冲突不会很快结束，长期风险溢价还在。
+>
+> 2. **原油曲线比股票更聪明** — 前月油大跌，但远月还收涨。说明短期断供风险在缓解，但中长期地缘政治风险没有消失。曲线走平。
+>
+> 3. **能源/化肥/油运/炼化股跌过头** — 这些股票在交易"问题解决了"，但基本面没那么快变。情绪化定价错误，不是基本面重估。
+>
+> 4. **大盘还能涨** — 股市不需要世界恢复和平，只需要别发展成全球经济灾难。只要市场相信海峡不会长期关闭，油价全年在 90 而不是 70，股市也未必扛不住。
+>
+> 5. **交易方法** — 不要每天跟着 headline 改观点。抓未来几个月会持续存在的结构性趋势。买"市场错杀但中期逻辑没坏"的东西。
+>
+> 6. **最大反向风险** — 谈判推进比预期快，远月油和能源安全篮子也会被继续压缩。高商品价格传导到通胀/增长，"海峡重开就没事"这条逻辑会变脆。
+
 ## Usage
 
 ### OpenClaw (one command)
