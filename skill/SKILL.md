@@ -2,7 +2,7 @@
 name: talk-normal
 slug: talk-normal
 description: Stop LLM slop. A curated system prompt that cuts verbose, corporate-sounding LLM output by 56-71% (measured) while preserving information. Works bilingually (English + Chinese). Installs into your AGENTS.md as an always-on behavior modifier.
-version: 0.3.1
+version: 0.4.0
 tags: [prompt, anti-slop, concise, system-prompt, chinese, bilingual, always-on]
 homepage: https://github.com/hexiecs/talk-normal
 license: MIT
