@@ -358,24 +358,44 @@ This is the actual case that motivated building talk-normal.
 
 ### OpenClaw
 
+Three ways, pick whichever fits your workflow:
+
+**Option 1: ClawHub (easiest updates)**
+
+```bash
+clawhub install talk-normal
+bash skills/talk-normal/install.sh
+```
+
+To pull the latest rules later:
+
+```bash
+clawhub update talk-normal
+bash skills/talk-normal/install.sh
+```
+
+**Option 2: Paste the GitHub link into chat**
+
 Paste this link into your OpenClaw chat and ask it to install:
 
 ```
 https://github.com/hexiecs/talk-normal
 ```
 
-Or install manually:
+**Option 3: Manual git clone**
 
 ```bash
 git clone https://github.com/hexiecs/talk-normal.git && cd talk-normal && bash install.sh
 ```
+
+All three paths end up running the same `install.sh`, which auto-detects your `AGENTS.md` and injects the prompt between `# --- talk-normal BEGIN ---` and `# --- talk-normal END ---` markers. The installer is idempotent: re-run it any time to pick up the latest rules without touching the rest of your `AGENTS.md`.
 
 Uninstall:
 ```bash
 bash install.sh --uninstall
 ```
 
-The script auto-detects your `AGENTS.md` and injects the prompt. Start a new conversation to take effect.
+Start a new conversation to take effect.
 
 ### ChatGPT custom instructions
 

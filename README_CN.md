@@ -358,24 +358,44 @@
 
 ### OpenClaw
 
+三种安装方式, 按你习惯的来:
+
+**方式 1: ClawHub (更新最方便)**
+
+```bash
+clawhub install talk-normal
+bash skills/talk-normal/install.sh
+```
+
+以后要拉最新规则:
+
+```bash
+clawhub update talk-normal
+bash skills/talk-normal/install.sh
+```
+
+**方式 2: 粘贴 GitHub 链接到聊天框**
+
 把这个链接粘贴到 OpenClaw 聊天框, 让它帮你安装:
 
 ```
 https://github.com/hexiecs/talk-normal
 ```
 
-或者手动安装:
+**方式 3: 手动 git clone**
 
 ```bash
 git clone https://github.com/hexiecs/talk-normal.git && cd talk-normal && bash install.sh
 ```
+
+三种方式最终都跑同一个 `install.sh`, 它会自动找到你的 `AGENTS.md`, 把规则注入到 `# --- talk-normal BEGIN ---` 和 `# --- talk-normal END ---` 标记之间。脚本是幂等的, 任何时候重新跑一次就能更新到最新规则, 不会影响你 `AGENTS.md` 里的其他内容。
 
 卸载:
 ```bash
 bash install.sh --uninstall
 ```
 
-脚本会自动找到你的 `AGENTS.md` 并注入 prompt。开一个新对话即可生效。
+开一个新对话即可生效。
 
 ### ChatGPT 自定义指令
 
