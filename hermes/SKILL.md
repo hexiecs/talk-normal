@@ -52,6 +52,7 @@ After installing, start a new Hermes session and ask a simple question like "Wha
 
 ## Pitfalls
 
+- **Security scanner**: Hermes flags this skill as "DANGEROUS" because it modifies `AGENTS.md` (persistent prompt modification). This is expected — the skill's entire purpose is injecting always-on prompt rules. Install with `hermes skills install --force hexiecs/talk-normal`.
 - Rules only take effect in a **new session** — Hermes freezes context files at session start.
 - If you have both `.hermes.md` and `AGENTS.md`, the installer writes to whichever it finds first (`.hermes.md` > `HERMES.md` > `AGENTS.md`).
 

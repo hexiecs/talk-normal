@@ -664,8 +664,10 @@ bash install.sh --uninstall
 **方式 1: 从 GitHub 安装**
 
 ```bash
-hermes skills install hexiecs/talk-normal
+hermes skills install --force hexiecs/talk-normal
 ```
+
+> 需要 `--force` 是因为这个 skill 会修改你的 `AGENTS.md` 来注入常驻 prompt 规则 — Hermes 的安全扫描器会将此标记为持久性 prompt 修改。skill 是开源的, 安装前可以在 [`hermes/SKILL.md`](hermes/SKILL.md) 查看完整内容。
 
 然后在你的项目目录运行安装器:
 
