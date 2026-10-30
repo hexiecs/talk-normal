@@ -1,62 +1,96 @@
 ---
 name: talk-normal
-description: Stop LLM slop. A curated system prompt that cuts verbose, corporate-sounding LLM output by 56-73% (measured) while preserving information. Works bilingually (English + Chinese). Installs into your AGENTS.md as an always-on behavior modifier.
+description: Install concise writing rules for Hermes sessions.
 version: 0.6.2
 author: hexiecs
 license: MIT
+platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [prompt, anti-slop, concise, system-prompt, chinese, bilingual, always-on]
     related_skills: []
 ---
 
-# talk-normal
+# Talk Normal Skill
 
-A curated system prompt that stops your LLM from writing like a LinkedIn post. Measured: 73% character reduction on GPT-4o-mini, 72% on GPT-5.4, across 10 prompts in English and Chinese, without losing information.
+Install the English and Chinese writing rules from `prompt.md` into a Hermes
+context file. This setup skill makes a persistent change that takes effect in
+new sessions until its marked block is removed.
 
 ## When to Use
 
-Run the installer once per workspace to make your Hermes agent permanently less verbose. This is not a per-turn skill — it is a one-time installer that injects always-on rules into your project's context file.
+Use when the user asks to install, update, or remove persistent talk-normal
+writing rules. Resolve the intended scope from the user's request: a project
+workspace, an exact context file, or the active Hermes profile globally.
+
+## Prerequisites
+
+- Python 3.8+ through `terminal`; use `python` on Windows if needed.
+- Write access to the selected context file.
+- For profile-wide installation, use the active profile's `HERMES_HOME`.
+
+## How to Run
+
+Use `terminal` to run the bundled helper by its absolute skill path. Keep the
+project workspace explicit so the result is independent of the terminal's CWD.
+
+```text
+python3 "${HERMES_SKILL_DIR}/scripts/install.py" --workspace "/absolute/project/path" --dry-run
+python3 "${HERMES_SKILL_DIR}/scripts/install.py" --workspace "/absolute/project/path"
+```
+
+Read the preview's `Target:` line and diff before applying the requested change.
+For global scope, use `--global` with the active profile's `HERMES_HOME` available
+to `terminal`. The default Hermes home is `~/.hermes`.
+
+## Quick Reference
+
+| Option | Effect |
+| --- | --- |
+| `--workspace PATH` | Discover a project context file inside its Git boundary. |
+| `--global` | Install in `HERMES_HOME/SOUL.md`. |
+| `--target FILE` | Install in the exact selected file. |
+| `--dry-run` | Print the resolved target and proposed diff. |
+| `--uninstall` | Remove the marked block using the same scope as installation. |
+
+The three scope options are mutually exclusive. Direct CLI use defaults to the
+current workspace. The Bash `install.sh` entry point accepts the same options.
 
 ## Procedure
 
-To install or update talk-normal in the current workspace:
+1. Resolve the user's requested scope and run a dry preview with `terminal`.
+2. Apply that same command with `--dry-run` removed.
+3. Inspect the printed target with `read_file` and verify one complete block.
+4. Start a new Hermes session so the updated context is loaded.
 
-```bash
-bash install.sh
-```
-
-The script auto-detects your workspace config file (`.hermes.md`, `HERMES.md`, or `AGENTS.md`) and injects the prompt between `# --- talk-normal BEGIN ---` and `# --- talk-normal END ---` markers. The installer is idempotent: running it again replaces the existing talk-normal block in place with the latest rules. Nothing else in your config file is touched.
-
-To remove:
-
-```bash
-bash install.sh --uninstall
-```
-
-Start a new Hermes session to take effect.
-
-## What gets installed
-
-The contents of `prompt.md` get injected into your workspace config file. The rules target the specific slop patterns that make LLM output sound corporate and padded:
-
-- **Filler and hedging** — banned opening phrases, no throat-clearing, no restating the question
-- **Structural discipline** — lead with the answer, match depth to complexity, bullets only when genuinely parallel
-- **Closing patterns** — no summary stamps, no hypothetical follow-up offers, no conditional next-step menus
-- **Rhetorical tics** — no negation-based contrastive framing, no plain-language restatements
-- **Shape of comparisons** — give a recommendation with brief reasoning, cap pros/cons lists
-
-## Verification
-
-After installing, start a new Hermes session and ask a simple question like "What is Python?". The response should be 3-5 sentences with no filler phrases. Compare against the benchmarks at https://github.com/hexiecs/talk-normal for expected output.
+Project discovery checks the nearest `.hermes.md` or `HERMES.md` up to the Git
+root first, then the nearest `AGENTS.override.md`, `AGENTS.md`, or `agents.md`.
+Existing workspace `CLAUDE.md`, `claude.md`, and `.cursorrules` are fallbacks.
+A fresh project gets `AGENTS.md` at its Git root; outside Git, discovery stays
+inside the selected directory. Global installation uses the profile's `SOUL.md`.
 
 ## Pitfalls
 
-- **Security scanner**: Hermes flags this skill as "DANGEROUS" because it modifies `AGENTS.md` (persistent prompt modification). This is expected — the skill's entire purpose is injecting always-on prompt rules. Install with `hermes skills install --force hexiecs/talk-normal/skill-hermes`.
-- Rules only take effect in a **new session** — Hermes freezes context files at session start.
-- If you have both `.hermes.md` and `AGENTS.md`, the installer writes to whichever it finds first (`.hermes.md` > `HERMES.md` > `AGENTS.md`).
+- The helper writes persistent instructions. Review `SKILL.md`, `prompt.md`, and
+  `scripts/install.py` before installing. If Hermes blocks the skill's security
+  scan, inspect the findings and use its documented override only after review.
+- A `~/AGENTS.md` applies to workspaces where Hermes discovers it. Profile-wide
+  writing preferences belong in `HERMES_HOME/SOUL.md`.
+- Installing a skill bundle and applying its persistent writing rules are two
+  separate steps. Use the actual skill directory reported by `skill_view`.
+- For removal, reuse the exact target printed during installation, for example
+  `--target "/absolute/project/AGENTS.md" --uninstall`.
+- Damaged or duplicate markers produce an error before any file is written.
 
-## Upstream and issues
+## Verification
 
-- Source: https://github.com/hexiecs/talk-normal
-- Issues and rule suggestions: https://github.com/hexiecs/talk-normal/issues
+Use `read_file` on the printed target to verify the block between
+`# --- talk-normal BEGIN ---` and `# --- talk-normal END ---`, with surrounding
+instructions preserved. Repeating the command should report `Already up to date.`
+Ask a simple question in a new Hermes session to check the writing style.
+
+Offline regression tests from the source checkout:
+
+```text
+python3 -m unittest discover -s tests -p 'test_hermes_install.py' -v
+```

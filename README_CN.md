@@ -659,36 +659,59 @@ bash install.sh --uninstall
 
 ### Hermes Agent
 
-两种方式:
+Hermes 包是一个配置安装型 skill：先安装 skill 包，再通过包内脚本把写作规则写入所选配置文件。
+需要 Python 3.8+，命令为 `python3`，Windows 上也可使用 `python`。
 
-**方式 1: 从 GitHub 安装**
+**方式 1：安装 skill 包**
 
 ```bash
-hermes skills install --force hexiecs/talk-normal/skill-hermes
+hermes skills install hexiecs/talk-normal/skill-hermes
 ```
 
-> 需要 `--force` 是因为这个 skill 会修改你的 `AGENTS.md` 来注入常驻 prompt 规则 — Hermes 的安全扫描器会将此标记为持久性 prompt 修改。skill 是开源的, 安装前可以在 [`skill-hermes/SKILL.md`](skill-hermes/SKILL.md) 查看完整内容。
+安装前阅读 [`SKILL.md`](skill-hermes/SKILL.md)、[`prompt.md`](skill-hermes/prompt.md)
+和[安装脚本](skill-hermes/scripts/install.py)。Hermes 安全扫描器可能因持久修改上下文文件而阻止安装，
+请先核查扫描结果，再决定使用 CLI 的 `--force` 覆盖选项。
 
-然后运行安装器 (全局安装到 `~/AGENTS.md`):
+然后让 Hermes 使用 talk-normal，预览并安装写作规则。明确指定项目的绝对路径，或指定对当前 Hermes
+配置档全局生效。skill 会使用 `skill_view` 返回的实际安装目录，兼容自定义 skill 路径和命名配置档。
+
+**方式 2：从源码运行**
 
 ```bash
-cd ~ && bash ~/.hermes/skills/skill-hermes/install.sh
+git clone https://github.com/hexiecs/talk-normal.git talk-normal
+python3 talk-normal/skill-hermes/scripts/install.py --workspace "/absolute/project/path" --dry-run
+python3 talk-normal/skill-hermes/scripts/install.py --workspace "/absolute/project/path"
 ```
 
-如果只想在特定项目里生效, 先 `cd` 到该项目目录再运行安装器。
+项目安装优先寻找 Git 边界内最近的 `.hermes.md` / `HERMES.md`，然后选择目录链内有效的
+`AGENTS.override.md` / `AGENTS.md` / `agents.md`。工作目录现有的 `CLAUDE.md`、`claude.md`
+和 `.cursorrules` 作为后备。全新 Git 项目会在根目录创建 `AGENTS.md`；Git 仓库外以所选目录为搜索边界。
+也可通过 `--target "/absolute/path/to/context.md"` 精确指定文件。
 
-**方式 2: 手动 git clone**
+需要在当前 Hermes 配置档的所有项目中生效时：
 
 ```bash
-git clone https://github.com/hexiecs/talk-normal.git
-cd ~ && bash talk-normal/install.sh
+python3 talk-normal/skill-hermes/scripts/install.py --global --dry-run
+python3 talk-normal/skill-hermes/scripts/install.py --global
 ```
 
-安装器会自动检测你的工作区配置文件 (`.hermes.md`、`HERMES.md` 或 `AGENTS.md`) 并注入规则。Hermes 在会话启动时冻结上下文文件, 所以安装后需要开一个新会话才生效。
+`--global` 使用 `HERMES_HOME` 下的 `SOUL.md`，默认目录为 `~/.hermes`。使用命名配置档时，
+请让安装命令获得该配置档对应的 `HERMES_HOME`。脚本保留 talk-normal 标记块前后的身份配置。
+`~/AGENTS.md` 的作用范围取决于 Hermes 的项目上下文发现规则；配置档全局偏好应写入 `HERMES_HOME/SOUL.md`。
 
-卸载:
+每次执行都会打印目标文件的绝对路径。重复安装会更新已有标记块。卸载时使用安装输出中的同一文件：
+
 ```bash
-cd ~ && bash ~/.hermes/skills/skill-hermes/install.sh --uninstall
+python3 talk-normal/skill-hermes/scripts/install.py --target "/absolute/path/printed/by/the/installer" --uninstall
+```
+
+Bash 入口 `skill-hermes/install.sh` 支持相同参数。安装或卸载后开启新 Hermes 会话以载入更新。
+配置文件加载规则见 [Hermes 官方文档](https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files)。
+
+在仓库根目录运行离线安装回归测试：
+
+```bash
+python3 -m unittest discover -s tests -p 'test_hermes_install.py' -v
 ```
 
 ### ChatGPT 自定义指令

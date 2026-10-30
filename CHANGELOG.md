@@ -2,6 +2,10 @@
 
 All notable changes to talk-normal will be recorded here. Format loosely follows [Keep a Changelog](https://keepachangelog.com/).
 
+## Unreleased
+
+- Give the Hermes bundle a Python installer with explicit project, file, and profile-wide scopes, a dry-run preview, and atomic block updates. Profile-wide rules use `HERMES_HOME/SOUL.md`; project discovery stays inside its Git boundary. Preserve the Hermes installer during bundle sync, update both READMEs, and add offline installer tests with Linux, macOS, and Windows CI.
+
 ## Week of 2026-04-11
 
 - Add `prompt-chatgpt.md`: a compressed variant of `prompt.md` built to fit ChatGPT's 1500-character custom-instructions field limit. Preserves all load-bearing rules (negation-frame ban, closing-stamp ban, conditional-menu ban, filler list, BAD/GOOD few-shot examples). Compressed version clocks in at 1400 chars (100-char margin). Use `prompt.md` for OpenClaw / API / Cursor / Continue where there is no length cap; use `prompt-chatgpt.md` only for the ChatGPT custom-instructions field. Motivated by a real bug report on Twitter from @ppdng: `prompt.md` v0.6.1 is 3527 chars and does not fit in a 1500-char field.

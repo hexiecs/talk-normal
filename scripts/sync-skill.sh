@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# sync-skill.sh — copy prompt.md and install.sh from the repo root into skill/
-# and skill-hermes/, and auto-update each SKILL.md's version field to match the
+# sync-skill.sh — copy prompt.md into both bundles and install.sh into skill/,
+# preserving the Hermes-specific installer. Update each SKILL.md to match the
 # version header at the top of prompt.md. Single source of truth for the
 # version is prompt.md.
 #
@@ -40,12 +40,12 @@ if [ -z "$VERSION" ]; then
   exit 1
 fi
 
-# Copy the source files into skill/ and hermes/
+# Both bundles share the rules; each keeps its own platform integration.
 for dest in "$SKILL_DIR" "$HERMES_DIR"; do
   cp "$PROMPT_FILE" "$dest/prompt.md"
-  cp "$REPO_ROOT/install.sh" "$dest/install.sh"
-  chmod +x "$dest/install.sh"
 done
+cp "$REPO_ROOT/install.sh" "$SKILL_DIR/install.sh"
+chmod +x "$SKILL_DIR/install.sh" "$HERMES_DIR/install.sh"
 
 # Update SKILL.md version: field in both bundles
 for manifest in "$SKILL_MANIFEST" "$HERMES_MANIFEST"; do
@@ -57,7 +57,7 @@ for manifest in "$SKILL_MANIFEST" "$HERMES_MANIFEST"; do
   fi
 done
 
-echo "Synced prompt.md and install.sh into $SKILL_DIR/ and $HERMES_DIR/"
+echo "Synced prompt.md into both bundles and the OpenClaw installer into $SKILL_DIR/"
 echo "Bumped SKILL.md version fields to $VERSION"
 
 # Soft reminder: if prompt.md has any commits newer than the most recent

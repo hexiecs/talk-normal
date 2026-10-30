@@ -659,36 +659,69 @@ Start a new conversation to take effect.
 
 ### Hermes Agent
 
-Two ways:
+The Hermes bundle is a setup skill: installing the bundle makes its helper
+available, and running the helper applies the persistent writing rules.
+Requires Python 3.8+ (`python3`, or `python` on Windows).
 
-**Option 1: Install from GitHub**
+**Option 1: Install the skill bundle**
 
 ```bash
-hermes skills install --force hexiecs/talk-normal/skill-hermes
+hermes skills install hexiecs/talk-normal/skill-hermes
 ```
 
-> `--force` is required because this skill modifies your `AGENTS.md` to inject always-on prompt rules — Hermes's security scanner flags that as persistent prompt modification. The skill is open-source; review it at [`skill-hermes/SKILL.md`](skill-hermes/SKILL.md) before installing.
+Review [`SKILL.md`](skill-hermes/SKILL.md), [`prompt.md`](skill-hermes/prompt.md),
+and the [installer](skill-hermes/scripts/install.py). If the Hermes security
+scanner blocks persistent context modification, review its findings before
+using the CLI's `--force` override.
 
-Then run the installer (installs globally to `~/AGENTS.md`):
+Then ask Hermes to use talk-normal to preview and install the rules for either
+an explicit project path or globally for the active Hermes profile. The skill
+uses the absolute bundle directory reported by `skill_view`, so it works with
+custom skill locations and named profiles.
+
+**Option 2: Run from a source checkout**
 
 ```bash
-cd ~ && bash ~/.hermes/skills/skill-hermes/install.sh
+git clone https://github.com/hexiecs/talk-normal.git talk-normal
+python3 talk-normal/skill-hermes/scripts/install.py --workspace "/absolute/project/path" --dry-run
+python3 talk-normal/skill-hermes/scripts/install.py --workspace "/absolute/project/path"
 ```
 
-To install for a specific project instead, `cd` into that project directory before running the installer.
+Project discovery prefers the nearest `.hermes.md` / `HERMES.md` inside the Git
+boundary, then an active `AGENTS.override.md` / `AGENTS.md` / `agents.md` in the
+directory chain. Existing workspace `CLAUDE.md`, `claude.md`, or `.cursorrules`
+are fallbacks. A fresh Git project gets `AGENTS.md` at its root; outside Git,
+the selected directory is the discovery boundary. An exact file can be selected
+with `--target "/absolute/path/to/context.md"`.
 
-**Option 2: Manual git clone**
+For writing preferences across every project in the active Hermes profile:
 
 ```bash
-git clone https://github.com/hexiecs/talk-normal.git
-cd ~ && bash talk-normal/install.sh
+python3 talk-normal/skill-hermes/scripts/install.py --global --dry-run
+python3 talk-normal/skill-hermes/scripts/install.py --global
 ```
 
-The installer auto-detects your workspace config file (`.hermes.md`, `HERMES.md`, or `AGENTS.md`) and injects the rules. Hermes freezes context files at session start, so start a new session to take effect.
+`--global` uses `SOUL.md` inside `HERMES_HOME` (default `~/.hermes`). Run with
+the active profile's `HERMES_HOME` when using named profiles. Existing identity
+text is preserved around the talk-normal block. A `~/AGENTS.md` is project
+context for directories where Hermes discovers it; profile-wide preferences
+belong in `HERMES_HOME/SOUL.md`.
 
-Uninstall:
+Every command prints the resolved target. Repeating an installation updates
+only the marked block. Remove it using that same target:
+
 ```bash
-cd ~ && bash ~/.hermes/skills/skill-hermes/install.sh --uninstall
+python3 talk-normal/skill-hermes/scripts/install.py --target "/absolute/path/printed/by/the/installer" --uninstall
+```
+
+The Bash wrapper `skill-hermes/install.sh` accepts the same options. Hermes
+loads context at session start, so start a new session after installation or
+removal. See the [Hermes context-file documentation](https://hermes-agent.nousresearch.com/docs/user-guide/features/context-files).
+
+Offline installer tests (from the repository root):
+
+```bash
+python3 -m unittest discover -s tests -p 'test_hermes_install.py' -v
 ```
 
 ### ChatGPT custom instructions
